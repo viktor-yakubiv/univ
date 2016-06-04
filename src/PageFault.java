@@ -15,14 +15,13 @@ public class PageFault {
    * The page replacement algorithm for the memory management sumulator.
    * This method gets called whenever a page needs to be replaced.
    * <p>
-   * The page replacement algorithm included with the simulator is 
-   * FIFO (first-in first-out).  A while or for loop should be used 
-   * to search through the current memory contents for a canidate 
-   * replacement page.  In the case of FIFO the while loop is used 
-   * to find the proper page while making sure that virtPageNum is 
-   * not exceeded.
+   * The page replacement algorithm implemented here is Working Set
+   * The for loop locks current working set and chooses the page
+   * with minimal last touch time that was not read or modified.
+   * If it does not exists, chooses random (first in this implementation)
+   * page with minimal last touch time.
    * <pre>
-   *   Page page = ( Page ) mem.elementAt( oldestPage )
+   *   Page page = ( Page ) mem.elementAt( oldestUnusedPage )
    * </pre>
    * This line brings the contents of the Page at oldestPage (a 
    * specified integer) from the mem vector into the page object.  
@@ -30,7 +29,7 @@ public class PageFault {
    * Set the physical memory address of the page to be added equal 
    * to the page to be removed.
    * <pre>
-   *   controlPanel.removePhysicalPage( oldestPage )
+   *   controlPanel.removePhysicalPage( oldestUnusedPage )
    * </pre>
    * Once a page is removed from memory it must also be reflected 
    * graphically.  This line does so by removing the physical page 
@@ -51,38 +50,43 @@ public class PageFault {
    */
   public static void replacePage ( Vector mem , int virtPageNum , int replacePageNum , ControlPanel controlPanel ) 
   {
-    int count = 0;
     int oldestPage = -1;
     int oldestTime = 0;
-    int firstPage = -1;
-    int map_count = 0;
-    boolean mapped = false;
+    int oldestUnusedPage = -1;
+    int oldestUnusedTime = 0;
 
-    while (!(mapped) || count != virtPageNum ) {
-      Page page = (Page) mem.elementAt(count);
-      if ( page.physical != -1 ) {
-        if (firstPage == -1) {
-          firstPage = count;
-        }
-        if (page.inMemTime > oldestTime) {
-          oldestTime = page.inMemTime;
-          oldestPage = count;
-          mapped = true;
-        }
+    for(int pageIndex = 0; pageIndex < mem.size(); ++pageIndex) {
+      Page page = (Page) mem.elementAt(pageIndex);
+
+      // skip unreflected pages
+      if (page.physical == -1) continue;
+
+      // get preferred random page
+      if (page.lastTouchTime > oldestTime) {
+        oldestTime = page.lastTouchTime;
+        oldestPage = pageIndex;
       }
-      count++;
-      if (count == virtPageNum) {
-        mapped = true;
+      // get page to replace
+      if (page.R == 0 && page.M == 0 && page.inMemTime > oldestUnusedTime) {
+        oldestUnusedTime = page.inMemTime;
+        oldestUnusedPage = pageIndex;
       }
     }
-    if (oldestPage == -1) {
-      oldestPage = firstPage;
+    if (oldestUnusedPage == -1) {
+      oldestUnusedPage = oldestPage;
     }
-    Page page = ( Page ) mem.elementAt( oldestPage );
-    Page nextpage = ( Page ) mem.elementAt( replacePageNum );
-    controlPanel.removePhysicalPage( oldestPage );
-    nextpage.physical = page.physical;
-    controlPanel.addPhysicalPage( nextpage.physical , replacePageNum );
+
+    // get replacement pages
+    Page page = ( Page ) mem.elementAt( oldestUnusedPage );
+    Page next = ( Page ) mem.elementAt( replacePageNum );
+
+    // log
+    System.out.println(page);
+
+    // make replacement
+    controlPanel.removePhysicalPage( oldestUnusedPage );
+    next.physical = page.physical;
+    controlPanel.addPhysicalPage( next.physical , replacePageNum );
     page.inMemTime = 0;
     page.lastTouchTime = 0;
     page.R = 0;

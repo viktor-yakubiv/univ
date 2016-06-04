@@ -19,6 +19,19 @@ public class Page
     this.lastTouchTime = lastTouchTime;
     this.high = high;
     this.low = low;
-  } 	
+  }
 
+  @Override
+  public String toString() {
+    return "Page {" +
+            "\n  id: " + id +
+            "\n  physical: " + physical +
+            "\n  R: " + R +
+            "\n  M: " + M +
+            "\n  inMemTime: " + inMemTime +
+            "\n  lastTouchTime: " + lastTouchTime +
+            "\n  high: " + high +
+            "\n  low: " + low +
+            "\n}";
+  }
 }
