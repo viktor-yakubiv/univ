@@ -1,0 +1,14 @@
+/*!
+ * Calendar CSS
+ * © 2017 Viktor Yakubiv (www.yakubiv.com)
+ * Licenced under MIT
+ */
+
+
+/* Core */
+@import url(base.css);
+@import url(buttons.css);
+@import url(containers.css);
+
+/* Components */
+@import url(header.css);

@@ -1,0 +1,46 @@
+<!doctype html>
+<html class="no-js" lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Календарь</title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <script>document.documentElement.className = 'js';</script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="browser-upgrade">
+  You are using an <strong>outdated</strong> browser.
+  Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
+</p>
+<![endif]-->
+
+<main class="calendar">
+  <header class="calendar-header container">
+    <nav class="calendar-actions">
+      <button class="button" id="calendar-add">Добавить</button>
+      <button class="button" id="calendar-refresh">Обновить</button>
+    </nav>
+
+    <form id="calendar-search">
+      <label for="calendar-search-field">
+        <span class="sr-only">Поиск</span>
+        <span class="icon icon-search"></span>
+      </label>
+
+      <input id="calendar-search-field" type="search" name="q" placeholder="Событие, дата или участник">
+
+      <button class="button" type="submit">
+        Вперед!
+      </button>
+    </form>
+  </header>
+</main>
+
+</body>
+</html>
