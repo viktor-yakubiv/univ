@@ -49,13 +49,13 @@ class CalendarView {
 
     let monthHTML = '';
     for (let date = new Date(startDate), weekDay = 0; date < endDate; date.setDate(date.getDate() + 1), weekDay++) {
-      if (weekDay % 7 === 0) monthHTML += '      <tr>';
+      //if (weekDay % 7 === 0) monthHTML += '      <tr>';
       let dayClass = 'calendar-day' + (date.getMonth() === month ? '' : ' muted');
       monthHTML += `
-        <td class="${dayClass}">
+        <div class="${dayClass}">
           <div class="calendar-day-title">${date.getDate()}</div>
-        </td>`;
-      if (weekDay % 7 === 6) monthHTML += '\n      </tr>\n';
+        </div>`;
+      //if (weekDay % 7 === 6) monthHTML += '\n      </tr>\n';
     }
     console.log(monthHTML);
 
