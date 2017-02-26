@@ -1,0 +1,30 @@
+{
+  "name": "calendar",
+  "version": "1.0.0",
+  "description": "Simple calendar application with JavaScript",
+  "main": "dist/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "calendar",
+    "js"
+  ],
+  "author": "Viktor Yakubiv (www.yakubiv.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^6.7.2",
+    "browser-sync": "^2.18.7",
+    "cssnano": "^3.10.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-filter": "^5.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-postcss": "^6.3.0",
+    "gulp-rename": "^1.2.2",
+    "postcss-import": "^9.1.0",
+    "postcss-nesting": "^2.3.1",
+    "postcss-sorting": "^2.0.1",
+    "run-sequence": "^1.2.2"
+  }
+}
