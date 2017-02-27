@@ -1,18 +1,58 @@
 class Calendar {
-  constructor() {
+  constructor(url) {
+    // Model events
+    this.onLoad = new Event(this);
+    this.onSelectionChange = new Event(this);
+    this.onEventAdd = new Event(this);
+    this.onEventRemove = new Event(this);
+
+
     // Events in calendar
     this.events = [];
+    this.selectedDate = new Date();
 
     // Calendar start day
     this.weekStart = 1;
 
-    // Events
-    this.onAdd = new Event(this);
+    // Load events from server
+    this.loadEvents(url);
   }
 
 
-  get today() {
-    return new Date();
+  get selectedDate() {
+    return this.selected;
+  }
+
+  set selectedDate(date) {
+    date = new Date(date);
+    this.selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    this.onSelectionChange.notify(this.selected);
+    return this.selected;
+  }
+
+
+  loadEvents(url) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+
+    let calendar = this;
+    xhr.onload = function () {
+      let eventObjects = JSON.parse(this.responseText);
+      let events = [];
+      for (let event of eventObjects) {
+        events.push(new CalendarEvent(calendar, event.name, new Date(event.date), event.members, event.description));
+      }
+
+      calendar.events = calendar.events.concat(events);
+      calendar.onLoad.notify(events);
+    };
+
+    xhr.onerror = function () {
+      console.error('Error connection with server');
+      setTimeout(() => { this.loadEvents(url); }, 5000);
+    };
+
+    xhr.send();
   }
 
 
@@ -37,17 +77,57 @@ class Calendar {
     let event = new CalendarEvent(name, date, members, description);
     this.events.push(event);
 
-    this.onAdd.notify(event);
+    this.onEventAdd.notify(event);
   }
 
-  filterEvents(startDate, endDate) {}
+
+  removeEvent(event) {
+    let eventIndex = this.events.indexOf(event);
+    if (eventIndex > -1) {
+      let removed = this.events.splice(eventIndex, 1);
+      this.onEventRemove.notify(removed);
+    }
+  }
+
+
+  filterEvents(startDate, endDate) {
+    let filtered = [];
+    for (let event of this.events) {
+      if (event.date > startDate && event.date < endDate) {
+        filtered.push(event);
+      }
+    }
+    return filtered;
+  }
 }
 
+
 class CalendarEvent {
-  constructor(name, date, members=[], description='') {
+  constructor(calendar, name, date, members=[], description='') {
+    this.parent = calendar;
     this.name = name;
     this.date = date;
     this.members = members;
     this.description = description;
+
+    this.onCreate = new Event(this);
+    this.onUpdate = new Event(this);
+    this.onRemove = new Event(this);
+
+    this.onCreate.notify();
+  }
+
+  update(params) {
+    for (let param in params) {
+      if (typeof this[param] !== 'undefined') {
+        this[param] = params[param];
+      }
+    }
+    this.onUpdate.notify();
+  }
+
+  remove() {
+    this.parent.removeEvent(this);
+    this.onRemove.notify();
   }
 }

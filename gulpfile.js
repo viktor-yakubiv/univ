@@ -23,6 +23,11 @@ gulp.task('clean', () => {
   return del('dist');
 });
 
+gulp.task('copy', () => {
+  return gulp.src('src/events.json')
+    .pipe(gulp.dest('dist'));
+});
+
 gulp.task('js', () => {
   return gulp.src('src/js/**')
     .pipe(gulp.dest('dist/js'))
@@ -50,7 +55,7 @@ gulp.task('html', () => {
 gulp.task('build', (cb) => {
   runSequence(
     'clean',
-    ['js', 'css', 'html'],
+    ['copy', 'js', 'css', 'html'],
     cb
   );
 });

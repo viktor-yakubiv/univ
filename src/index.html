@@ -42,22 +42,26 @@
 
   <div class="container">
     <div class="calendar-controls">
-      <button class="button small">Предыдущий</button>
+      <button class="button small" id="calendar-button-prev">Предыдущий</button>
       <span class="calendar-title" id="calendar-title"></span>
-      <button class="button small">Следующий</button>
+      <button class="button small" id="calendar-button-next">Следующий</button>
     </div>
 
-    <div class="calendar-month">
-      <ul class="calendar-weekdays">
-        <li>Понедельник</li>
-        <li>Вторник</li>
-        <li>Среда</li>
-        <li>Четверг</li>
-        <li>Пятница</li>
-        <li>Суббота</li>
-        <li>Воскресенье</li>
-      </ul>
-      <div class="calendar-days" id="calendar-month"></div>
+    <div class="table-container">
+      <table class="calendar-month">
+        <thead class="calendar-weekdays">
+          <tr>
+            <th>Понедельник</th>
+            <th>Вторник</th>
+            <th>Среда</th>
+            <th>Четверг</th>
+            <th>Пятница</th>
+            <th>Суббота</th>
+            <th>Воскресенье</th>
+          </tr>
+        </thead>
+        <tbody class="calendar-days" id="calendar-month"></tbody>
+      </table>
     </div>
   </div>
 </main>
