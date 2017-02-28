@@ -11,6 +11,17 @@
 }
 
 
+/* Title */
+
+.calendar-title {
+  display: inline-block;
+  width: 10rem;
+  padding: 0 1rem;
+  user-select: none;
+  text-align: center;
+}
+
+
 /* Controls */
 
 .calendar-controls {

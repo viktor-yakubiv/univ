@@ -145,7 +145,7 @@ class CalendarEventView {
     this.element = document.createElement('li');
     this.element.className = 'clearfix';
     this.element.innerHTML = `
-      <button class="button inline transparent float-right">
+      <button class="button thin transparent float-right">
         <span class="icon-cross"></span>
         <span class="sr-only">Удалить</span>
       </button>

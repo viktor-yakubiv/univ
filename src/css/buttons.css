@@ -1,0 +1,67 @@
+.button {
+  margin: 0;
+  padding: .575rem 1rem;
+  font-size: .85rem;
+  line-height: 1;
+  color: #000;
+  background: #fff;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  transition: .15s;
+  cursor: pointer;
+  user-select: none;
+  outline: 0;
+}
+
+.button:hover,
+.button:focus {
+  box-shadow: inset 0 0 4px rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.15);
+  outline: 0;
+}
+
+.button:active {
+  box-shadow: inset 0 1px 4px rgba(0,0,0,.05), 0 0 1px rgba(0,0,0,.15);
+  outline: 0;
+}
+
+.button:active * {
+}
+
+.button + .button {
+  margin-left: .5rem;
+}
+
+
+/* Colors */
+
+.button.primary {
+  background: #1e88e5;
+  color: #fff;
+}
+
+.button.transparent {
+  background: transparent;
+  box-shadow: none;
+}
+
+.button.transparent:hover,
+.button.transparent:focus {
+  background: #fff;
+  box-shadow: inset 0 0 4px rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.15);
+}
+
+.button.transparent:active {
+  box-shadow: inset 0 1px 4px rgba(0,0,0,.05), 0 0 1px rgba(0,0,0,.15);
+}
+
+
+/* Sizes */
+
+.button.small {
+  padding: .375rem .5rem;
+}
+
+.button.thin {
+  padding: .075rem .15rem;
+}
