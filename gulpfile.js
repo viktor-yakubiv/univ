@@ -15,6 +15,7 @@ const cssImport     = require('postcss-import');
 const nano          = require('cssnano');
 const nesting       = require('postcss-nesting');
 const sorting       = require('postcss-sorting');
+const inlineSVG     = require('postcss-inline-svg');
 
 const browserSync   = require('browser-sync').create();
 
@@ -37,10 +38,18 @@ gulp.task('js', () => {
 gulp.task('css', () => {
   return gulp.src('src/css/main.css')
     .pipe(plumber())
-    .pipe(postcss([cssImport(), autoprefixer(), sorting(), nesting()]))
+    .pipe(postcss([
+      cssImport(),
+      autoprefixer(),
+      sorting(),
+      nesting(),
+      inlineSVG({path: 'src/images/icons'})
+    ]))
     .pipe(gulp.dest('dist/css'))
     .pipe(filter('**/*.css'))
-    .pipe(postcss([nano()]))
+    .pipe(postcss([
+      nano()
+    ]))
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('dist/css'))
     .on('end', browserSync.reload);

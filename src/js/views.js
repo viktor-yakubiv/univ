@@ -143,28 +143,24 @@ class CalendarEventView {
 
     // Initialize element
     this.element = document.createElement('li');
-    this.element.innerHTML = `<div>${model.name}</div>
-      <div>
-        <button class="button inline transparent">
-          <span class="icon-delete"></span>
-          <span class="sr-only">Редактировать</span>
-        </button>
-        <button class="button inline transparent">
-          <span class="icon-delete"></span>
-          <span class="sr-only">Удалить</span>
-        </button>
-      </div>`;
+    this.element.className = 'clearfix';
+    this.element.innerHTML = `
+      <button class="button inline transparent float-right">
+        <span class="icon-cross"></span>
+        <span class="sr-only">Удалить</span>
+      </button>
+      <div>${model.name}</div>`;
     parentElement.appendChild(this.element);
 
     // Element to update
-    this.nameElement = this.element.children[0];
+    this.nameElement = this.element.children[1];
 
     // Event initialization
-    let controlElements = this.element.children[1].children;
+    let deleteButton = this.element.children[0];
     let self = this;
-    controlElements[1].onclick = function () {
+    deleteButton.addEventListener('click', () => {
       self.onRemove.notify(self.model);
-    };
+    });
 
     // Subscribe model events
     this.model.onRemove.attach(this.remove.bind(this));

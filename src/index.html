@@ -8,7 +8,7 @@
   <title>Календарь</title>
   <meta name="description" content="Простой календарь">
 
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/main.min.css">
   <script>document.documentElement.className = 'js';</script>
 </head>
 <body>
@@ -42,9 +42,15 @@
 
   <div class="container">
     <div class="calendar-controls">
-      <button class="button small" id="calendar-button-prev">Предыдущий</button>
+      <button class="button small" id="calendar-button-prev">
+        <span class="icon-triangle-left"></span>
+        <span class="sr-only">Предыдущий</span>
+      </button>
       <span class="calendar-title" id="calendar-title"></span>
-      <button class="button small" id="calendar-button-next">Следующий</button>
+      <button class="button small" id="calendar-button-next">
+        <span class="icon-triangle-right"></span>
+        <span class="sr-only">Следующий</span>
+      </button>
     </div>
 
     <div class="table-container">

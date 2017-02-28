@@ -7,8 +7,12 @@
 
 /* Core */
 @import url(base.css);
-
-/* Components */
 @import url(buttons.css);
 @import url(containers.css);
+@import url(icons.css);
+
+/* Components */
 @import url(calendar.css);
+
+/* Utilities */
+@import url('utilities.css');
