@@ -2,6 +2,7 @@
  * Copyright © 2017 Viktor Yakubiv
  */
 
+// General
 const gulp          = require('gulp');
 const del           = require('del');
 const filter        = require('gulp-filter');
@@ -9,6 +10,11 @@ const plumber       = require('gulp-plumber');
 const rename        = require('gulp-rename');
 const runSequence   = require('run-sequence');
 
+// JavaScript
+const babel         = require('gulp-babel');
+
+
+// CSS
 const postcss       = require('gulp-postcss');
 const autoprefixer  = require('autoprefixer');
 const cssImport     = require('postcss-import');
@@ -31,6 +37,9 @@ gulp.task('copy', () => {
 
 gulp.task('js', () => {
   return gulp.src('src/js/**')
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(gulp.dest('dist/js'))
     .on('end', browserSync.reload);
 });
