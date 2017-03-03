@@ -40,13 +40,13 @@
 
 /* Responsive helpers */
 
-@media (max-width: 639px) {
+@media (max-width: 768px) {
   .hidden-phone {
     display: none;
   }
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .visible-phone {
     display: none;
   }

@@ -26,7 +26,7 @@
       <button class="button primary" id="calendar-refresh">Обновить</button>
     </nav>
 
-    <form id="calendar-search">
+    <form id="calendar-search hidden">
       <label for="calendar-search-field">
         <span class="sr-only">Поиск</span>
         <span class="icon icon-search"></span>
@@ -57,13 +57,34 @@
       <table class="calendar-month">
         <thead class="calendar-weekdays">
           <tr>
-            <th>Понедельник</th>
-            <th>Вторник</th>
-            <th>Среда</th>
-            <th>Четверг</th>
-            <th>Пятница</th>
-            <th>Суббота</th>
-            <th>Воскресенье</th>
+            <th>
+              <span class="hidden-phone">Понедельник</span>
+              <span class="visible-phone">Пн</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Вторник</span>
+              <span class="visible-phone">Вт</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Среда</span>
+              <span class="visible-phone">Ср</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Четверг</span>
+              <span class="visible-phone">Чт</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Пятница</span>
+              <span class="visible-phone">Пт</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Суббота</span>
+              <span class="visible-phone">Сб</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Воскресенье</span>
+              <span class="visible-phone">Вс</span>
+            </th>
           </tr>
         </thead>
         <tbody class="calendar-days" id="calendar-month"></tbody>
