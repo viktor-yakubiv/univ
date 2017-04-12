@@ -34,6 +34,11 @@ function component(parentElement) {
     xhr.send();
   }
 
+  function parse(str) {
+    var obj = JSON.parse(str);
+    console.log(obj);
+  }
+
   function sort(key) {
     // check sort direction
     var dir = 1;
@@ -76,14 +81,32 @@ function component(parentElement) {
   }
 
   function init() {
-    element.innerHTML = ' ... selector... ';
-    element.querySelectorAll('.select').forEach(function (e) {
+    var html = '';
+    html +=
+      '<div>' +
+        '<label><input type="radio" value="data/large.json"> Large</label>' +
+        '<label><input type="radio" value="data/small.json"> Small</label>' +
+        '<label><input class="custom-control" type="radio"> Custom</label>' +
+      '</div>';
+    html +=
+      '<div class="custom-input hidden">' +
+        '<textarea placeholder="Put your JSON here..."></textarea>' +
+        '<button>Process</button>' +
+      '</div>';
+
+    element.innerHTML = html;
+    element.querySelectorAll('input').forEach(function (e) {
       e.onchange = function () {
         load(this.value);
       };
     });
-
-    load('data/large.json');
+    element.querySelector('.custom-control').onchange = function () {
+      console.log(this);
+      element.querySelector('.custom-input').className = 'custom-input';
+    };
+    element.querySelector('.custom-input button').onclick = function () {
+      parse(document.querySelector('.custom-input textarea'));
+    };
   }
 
   function show() {

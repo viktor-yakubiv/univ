@@ -19,6 +19,11 @@ th {
 }
 
 
+.hidden {
+  display: none;
+}
+
+
 .search {
   margin-bottom: 8px;
 }
