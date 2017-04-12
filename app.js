@@ -39,15 +39,35 @@ function component(parentElement) {
     var dir = 1;
     if (data.sort === key) dir = -1;
 
+    // save key
+    data.sort = key || data.sort;
+
     // look for rigth column
-    var col = Object.keys(data.headers).indexOf(key);
-    console.log(col);
+    var col = Object.keys(data.headers).indexOf(data.sort);
     if (col === -1) return;
 
     // sort
-    data.rows.sort(function (a, b) {
+    (data.search ? data.search : data.rows).sort(function (a, b) {
       return a[col].localeCompare(b[col]) * dir;
     });
+  }
+
+  function search(q) {
+    // reset page
+    data.page = 0;
+
+    // process query
+    if (!q) {
+      data.search = false;
+      if (data.sort) sort(data.sort);
+    } else {
+      data.search = {q: q, rows: []};
+      data.rows.forEach(function (e) {
+        if (e.join('\n').indexOf(q) !== -1) data.search.rows.push(e);
+      });
+    }
+
+    show();
   }
 
   function paginate(i) {
@@ -67,17 +87,23 @@ function component(parentElement) {
   }
 
   function show() {
-    var i;
-    console.log(data);
+    var i, html = '';
+
+    // search
+    html += '<div class="search">';
+    var searchQuery = (data.search ? data.search.q : '');
+    html += '<input placeholder="Search..." value="' + searchQuery +'">';
+    html += '</div>';
 
     // table
-    var html = '<table>';
+    html += '<table>';
     for (i in data.headers) html +=
       '<th data-sort="' + i + '">' + data.headers[i] + '</th>';
+    var rows = (data.search ? data.search.rows : data.rows);
     for (i = data.page * pageLen; i < (data.page + 1) * pageLen
-         && i < data.rows.length; ++i) {
+         && i < rows.length; ++i) {
       html += '<tr>';
-      data.rows[i].forEach(function (e) {
+      rows[i].forEach(function (e) {
         html += '<td>' + e + '</td>';
       });
       html += '</tr>';
@@ -86,7 +112,7 @@ function component(parentElement) {
 
     // pagination
     html += '<div class="pagination">';
-    for (i = 0; i < Math.ceil(data.rows.length / pageLen); ++i) {
+    for (i = 0; i < Math.ceil(rows.length / pageLen); ++i) {
       html += '<a href="#' + (i + 1) + '">' + (i + 1) + '</a>';
     }
     html += '</div>';
@@ -103,6 +129,10 @@ function component(parentElement) {
         paginate(Number.parseInt(this.hash.substr(1)));
       };
     });
+    element.querySelector('.search input').onkeyup = function () {
+      search(this.value);
+      element.querySelector('.search input').focus();
+    };
   }
 
   init();
