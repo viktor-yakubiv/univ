@@ -1,0 +1,41 @@
+html {
+  font: 14px/1.2 helvetica, arial, sans-serif;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #000;
+  vertical-align: top;
+}
+
+th {
+  background: #eee;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+
+.pagination {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.pagination a {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 4px;
+  width: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  text-align: center;
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  background: #eee;
+}
