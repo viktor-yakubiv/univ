@@ -1,27 +1,29 @@
-function component(parentElement) {
+function priceComponent(parentElement) {
   // elements
   var element = document.createElement('div');
+  element.className = 'price';
   parentElement.appendChild(element);
 
+  // init bootstrap subcomponent
+  loaderComponent(element);
+}
+
+function loaderComponent(parentElement) {
   // data
-  var data = {};
 
-  // options
-  var pageLen = 50;
+  let message = '';
 
+
+  // methods
 
   function load(url) {
-    element.innerHTML = 'Loading...';
+    parentElement.innerHTML = 'Loading...';
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
       if (xhr.status === 200 || xhr.status === 304) {
-        // invalid json
         if (xhr.response !== null) {
-          data.headers = xhr.response.splice(0, 1)[0];
-          data.rows = xhr.response;
-          data.page = 0;
-          show();
+          tableComponent(parentElement, xhr.response);
         } else {
           alert('Wrong JSON');
         }
@@ -39,131 +41,295 @@ function component(parentElement) {
     console.log(obj);
   }
 
-  function sort(key) {
-    // check sort direction
-    var dir = 1;
-    if (data.sort === key) dir = -1;
-
-    // save key
-    data.sort = key || data.sort;
-
-    // look for rigth column
-    var col = Object.keys(data.headers).indexOf(data.sort);
-    if (col === -1) return;
-
-    // sort
-    (data.search ? data.search : data.rows).sort(function (a, b) {
-      return a[col].localeCompare(b[col]) * dir;
-    });
-  }
-
-  function search(q) {
-    // reset page
-    data.page = 0;
-
-    // process query
-    if (!q) {
-      data.search = false;
-      if (data.sort) sort(data.sort);
+  function show() {
+    var html;
+    if (message) {
+      html =
+        '<div class="container">' +
+          '<div class="message">' + message + '</div>' +
+        '</div>';
     } else {
-      data.search = {q: q, rows: []};
-      data.rows.forEach(function (e) {
-        if (e.join('\n').indexOf(q) !== -1) data.search.rows.push(e);
-      });
+      html =
+        '<div class="container">' +
+          '<div class="select-container">' +
+            '<label>' +
+              '<input type="radio" name="data" value="data/large.json"> Large' +
+            '</label>' +
+            '<label>' +
+              '<input type="radio" name="data" value="data/small.json"> Small' +
+            '</label>' +
+            '<label>' +
+              '<input class="custom-control" type="radio" name="data"> Custom' +
+            '</label>' +
+          '</div>' +
+          '<div class="custom-input hidden">' +
+            '<textarea placeholder="Put your JSON here..."></textarea>' +
+            '<button>Process</button>' +
+          '</div>' +
+        '</div>';
     }
+    parentElement.innerHTML = html;
 
-    show();
-  }
 
-  function paginate(i) {
-    data.page = i;
-    show();
-  }
+    // events
 
-  function init() {
-    var html = '';
-    html +=
-      '<div>' +
-        '<label><input type="radio" value="data/large.json"> Large</label>' +
-        '<label><input type="radio" value="data/small.json"> Small</label>' +
-        '<label><input class="custom-control" type="radio"> Custom</label>' +
-      '</div>';
-    html +=
-      '<div class="custom-input hidden">' +
-        '<textarea placeholder="Put your JSON here..."></textarea>' +
-        '<button>Process</button>' +
-      '</div>';
-
-    element.innerHTML = html;
-    element.querySelectorAll('input').forEach(function (e) {
+    parentElement.querySelectorAll('input').forEach(function (e) {
       e.onchange = function () {
         load(this.value);
       };
     });
-    element.querySelector('.custom-control').onchange = function () {
-      console.log(this);
-      element.querySelector('.custom-input').className = 'custom-input';
+
+    parentElement.querySelector('.custom-control').onchange = function () {
+      parentElement.querySelector('.custom-input').className = 'custom-input';
     };
-    element.querySelector('.custom-input button').onclick = function () {
+
+    parentElement.querySelector('.custom-input button').onclick = function () {
       parse(document.querySelector('.custom-input textarea'));
     };
   }
 
-  function show() {
-    var i, html = '';
+  show();
+}
 
-    // search
-    html += '<div class="search">';
-    var searchQuery = (data.search ? data.search.q : '');
-    html += '<input placeholder="Search..." value="' + searchQuery +'">';
-    html += '</div>';
+function tableComponent(parentElement, data) {
+  // options
+
+  var pageLen = 50;
+
+
+  // data
+
+  var table = {};
+  table.head = data.splice(0, 1)[0];
+  table.rows = data;
+
+  table.page = 0;
+  table.sort = false;
+  table.filter = false;
+  table.selection = [];
+
+  var components = {};
+
+
+  // methods
+
+  function init() {
+    parentElement.innerHTML = '';
+
+    new filterComponent(parentElement, filter);
 
     // table
-    html += '<table>';
-    for (i in data.headers) html +=
-      '<th data-sort="' + i + '">' + data.headers[i] + '</th>';
-    var rows = (data.search ? data.search.rows : data.rows);
-    for (i = data.page * pageLen; i < (data.page + 1) * pageLen
-         && i < rows.length; ++i) {
-      html += '<tr>';
-      rows[i].forEach(function (e) {
-        html += '<td>' + e + '</td>';
-      });
-      html += '</tr>';
-    }
-    html += '</table>';
+    var tableElement = document.createElement('table');
+    parentElement.appendChild(tableElement);
+    components.tableHead = new headComponent(tableElement, table.head, sort);
+    components.tableRows = new rowsComponent(tableElement, select);
 
-    // pagination
-    html += '<div class="pagination">';
-    for (i = 0; i < Math.ceil(rows.length / pageLen); ++i) {
-      html += '<a href="#' + (i + 1) + '">' + (i + 1) + '</a>';
-    }
-    html += '</div>';
+    components.pagination = new paginationComponent(parentElement, paginate);
+    components.selection = new selectionComponent(parentElement, table.head);
 
-    element.innerHTML = html;
-    element.querySelectorAll('th').forEach(function (e) {
-      e.onclick = function () {
-        sort(this.getAttribute('data-sort'));
-      };
-    });
-    element.querySelectorAll('.pagination a').forEach(function (e) {
-      e.onclick = function (event) {
-        event.preventDefault();
-        paginate(Number.parseInt(this.hash.substr(1)));
-      };
-    });
-    element.querySelector('.search input').onkeyup = function () {
-      search(this.value);
-      element.querySelector('.search input').focus();
+    show();
+  }
+
+  function sort(key) {
+    if (!table.sort) table.sort = {
+      key: '',
+      dir: 1
     };
+
+    // change direction
+    if (table.sort.key === key) {
+      table.sort.dir *= -1;
+    }
+
+    // save key
+    table.sort.key = key || table.sort.key;
+
+    // look for rigth column
+    var col = Object.keys(table.head).indexOf(table.sort.key);
+    if (col === -1) return;
+
+    // sort
+    (table.filter ? table.filter.rows : table.rows).sort(function (a, b) {
+      // TODO: Fix numbers
+      return String(a[col]).localeCompare(String(b[col]),
+        {numeric: true}) * table.sort.dir;
+    });
+
+    show();
+  }
+
+  function filter(q) {
+    // reset page
+    table.page = 0;
+
+    // process query
+    if (!q) {
+      table.filter = false;
+      if (table.sort) sort(table.sort.key);
+    } else {
+      table.filter = {q: q, rows: []};
+      table.rows.forEach(function (e) {
+        if (e.join('\n').indexOf(q) !== -1) table.filter.rows.push(e);
+      });
+    }
+
+    show();
+  }
+
+  function select(index) {
+    index = pageLen * table.page + index;
+    var row = (table.filter ? table.filter.rows : table.rows)[index];
+    // TODO: Fix existence of rows in selection
+    table.selection.push(row);
+    components.selection.show(table.selection);
+  }
+
+  function paginate(i) {
+    table.page = i;
+    show();
+  }
+
+  function show() {
+    var rows = table.filter ? table.filter.rows : table.rows;
+    components.tableHead.show(table.sort);
+    components.tableRows.show(
+      rows.slice(table.page * pageLen, (table.page + 1) * pageLen));
+    components.pagination.show(Math.ceil(rows.length / pageLen));
+    components.selection.show(table.selection);
+  }
+
+
+  // subcomponents
+
+  function filterComponent(parentElement, callback) {
+    var element = document.createElement('div');
+    element.className = 'container filter';
+    element.innerHTML = '<input placeholder="Filter...">';
+    parentElement.appendChild(element);
+
+    element.querySelector('input').oninput = function () {
+      callback(this.value);
+    };
+
+    return this;
+  }
+
+  function headComponent(parentElement, head, callback) {
+    var element = document.createElement('thead');
+    parentElement.appendChild(element);
+
+    this.show = function(sort) {
+      var html = '';
+      for (var key in head) {
+        var classAttr = (sort && sort.key === key
+          ? ' class="' + (sort.dir > 0 ? 'sort-asc' : 'sort-desc') + '"'
+          : '');
+        html +=
+          '<th' + classAttr + ' data-sort="' + key + '">' +
+            head[key] +
+          '</th>';
+      }
+      element.innerHTML = html;
+
+      element.querySelectorAll('th').forEach(function (e) {
+        e.onclick = function () {
+          callback(this.getAttribute('data-sort'));
+        };
+      });
+    };
+
+    return this;
+  }
+
+  function rowsComponent(parentElement, callback) {
+    var element = document.createElement('tbody');
+    parentElement.appendChild(element);
+
+    this.show = function (rows) {
+      var html = '';
+      for (var row of rows) {
+        html += '<tr>';
+        for (var cell of row) html += '<td>' + cell + '</td>';
+        html += '</tr>';
+      }
+      element.innerHTML = html;
+
+      element.querySelectorAll('tr').forEach(function (e, i) {
+        e.onclick = function () {
+          callback(i);
+        };
+      });
+    };
+
+    return this;
+  }
+
+  function selectionComponent(parentElement, head) {
+    var element = document.createElement('table');
+    parentElement.appendChild(element);
+
+    this.show = function (rows) {
+      var html = '';
+
+      if (rows && rows.length > 0) {
+        html += '<thead><tr>';
+        for (var key in head) {
+          html += '<th>' + head[key] + '</th>';
+        }
+        html += '</tr></thead>';
+
+        html += '<tbody>';
+        for (var row of rows) {
+          html += '<tr>';
+          for (var cell of row) {
+            html += '<td>' + cell + '</td>';
+          }
+          html += '</tr>';
+        }
+        html += '</tbody>';
+      }
+
+      element.innerHTML = html;
+    };
+
+    return this;
+  }
+
+  function paginationComponent(parentElement, callback) {
+    var element = document.createElement('div');
+    element.className = 'container pagination';
+    parentElement.appendChild(element);
+
+    this.show = function (pageCount) {
+      if (pageCount < 2) {
+        element.innerHTML = '';
+        return;
+      }
+
+      var html = '';
+      for (var i = 0; i < pageCount; ++i) {
+        html += '<a href="#' + (i + 1) + '">' + (i + 1) + '</a>';
+      }
+      element.innerHTML = html;
+
+      element.querySelectorAll('a').forEach(function (e) {
+        e.onclick = function (event) {
+          event.preventDefault();
+          callback(Number.parseInt(this.hash.substr(1)));
+        };
+      });
+    };
+
+    return this;
   }
 
   init();
 }
 
+
 var appElement = document.getElementById('app');
-component(appElement);
+priceComponent(appElement);
 
 document.getElementById('add-component').onclick = function () {
-  component(appElement);
+  priceComponent(appElement);
 };
