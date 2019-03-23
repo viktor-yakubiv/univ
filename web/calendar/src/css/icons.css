@@ -1,0 +1,23 @@
+[class^='icon-']::before,
+[class*=' icon-']::before {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+}
+
+.icon-cross::before {
+  content: svg-load('cross.svg', fill=#000);
+  bottom: -.2em;
+}
+
+.icon-triangle-left::before {
+  content: svg-load('triangle-left.svg', fill=#000);
+  bottom: -.15em;
+}
+
+.icon-triangle-right::before {
+  content: svg-load('triangle-right.svg', fill=#000);
+  bottom: -.15em;
+}

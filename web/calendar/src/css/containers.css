@@ -1,0 +1,9 @@
+.container {
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}

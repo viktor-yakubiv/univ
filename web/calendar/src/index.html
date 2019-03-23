@@ -1,0 +1,126 @@
+<!doctype html>
+<html class="no-js" lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Календарь</title>
+  <meta name="description" content="Простой календарь">
+
+  <link rel="stylesheet" href="css/main.min.css">
+  <script>document.documentElement.className = 'js';</script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="browser-upgrade">
+  Ви используете <strong>устаревший</strong> браузер.
+  Пожалуйста, <a href="http://browsehappy.com/">обновите ваш браузер</a>, чтобы облегчить просмотр веб-страниц.
+</p>
+<![endif]-->
+
+<main class="calendar">
+  <header class="calendar-header container">
+    <nav class="calendar-actions">
+      <button class="button primary" id="calendar-add">Добавить</button>
+      <button class="button primary" id="calendar-refresh">Обновить</button>
+    </nav>
+
+    <form id="calendar-search hidden">
+      <label for="calendar-search-field">
+        <span class="sr-only">Поиск</span>
+        <span class="icon icon-search"></span>
+      </label>
+
+      <input id="calendar-search-field" type="search" name="q" placeholder="Событие, дата или участник">
+
+      <button class="button" type="submit">
+        Вперед!
+      </button>
+    </form>
+  </header>
+
+  <div class="container">
+    <div class="calendar-controls">
+      <button class="button small" id="calendar-button-prev">
+        <span class="icon-triangle-left"></span>
+        <span class="sr-only">Предыдущий</span>
+      </button>
+      <span class="calendar-title" id="calendar-title"></span>
+      <button class="button small" id="calendar-button-next">
+        <span class="icon-triangle-right"></span>
+        <span class="sr-only">Следующий</span>
+      </button>
+    </div>
+
+    <div class="table-container">
+      <table class="calendar-month">
+        <thead class="calendar-weekdays">
+          <tr>
+            <th>
+              <span class="hidden-phone">Понедельник</span>
+              <span class="visible-phone">Пн</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Вторник</span>
+              <span class="visible-phone">Вт</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Среда</span>
+              <span class="visible-phone">Ср</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Четверг</span>
+              <span class="visible-phone">Чт</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Пятница</span>
+              <span class="visible-phone">Пт</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Суббота</span>
+              <span class="visible-phone">Сб</span>
+            </th>
+            <th>
+              <span class="hidden-phone">Воскресенье</span>
+              <span class="visible-phone">Вс</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="calendar-days" id="calendar-month"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<form class="calendar-modal hidden" id="calendar-event-modal">
+  <div class="form-group">
+    <label class="sr-only" for="calendar-input-name">Название</label>
+    <input class="form-control" id="calendar-input-name" type="text" name="name" value="" placeholder="Событие">
+  </div>
+  <div class="form-group">
+    <label class="sr-only" for="calendar-input-date">Дата</label>
+    <input class="form-control" id="calendar-input-date" type="datetime" name="name" value="" placeholder="День, месяц, год">
+  </div>
+  <div class="form-group">
+    <label class="sr-only" for="calendar-input-members">Участники</label>
+    <input class="form-control" id="calendar-input-members" type="text" name="name" value="" placeholder="Имена участников" title="Имена участников через запятую">
+  </div>
+  <div class="form-group">
+    <label class="sr-only" for="calendar-input-description">Описание</label>
+    <textarea class="form-control" id="calendar-input-description" name="description" placeholder="Описание"></textarea>
+  </div>
+  <div class="form-group">
+    <button class="button primary" type="submit">Сохранить</button>
+    <button class="button">Удалить</button>
+  </div>
+</form>
+
+<script src="js/utilities.js"></script>
+<script src="js/models.js"></script>
+<script src="js/controllers.js"></script>
+<script src="js/views.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
